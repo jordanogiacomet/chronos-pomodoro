@@ -1,21 +1,19 @@
-import { Fragment } from 'react/jsx-runtime';
-import { Heading } from './components/Heading';
-
 import './styles/theme.css';
 import './styles/global.css';
+import { Fragment } from 'react/jsx-runtime';
+
+import { Heading } from './components/Heading';
+import { Container } from './components/Container';
 
 export function App() {
-  console.log('Oi');
-
   return (
     <Fragment>
-      <Heading />
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam, ab
-        deserunt, illum assumenda maiores officia consequatur laborum optio sed
-        quaerat aperiam quas soluta neque labore explicabo velit, voluptatem
-        tempora earum!
-      </p>
+      <Container>
+        <Heading>LOGO</Heading>
+      </Container>
+      <Container>
+        <Heading>MENU</Heading>
+      </Container>
     </Fragment>
   );
 }
