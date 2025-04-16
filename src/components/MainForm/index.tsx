@@ -8,21 +8,25 @@ import { useTaskContext } from '../../contexts/TaskContext/useTaskContext.ts';
 import { getNextCycleType } from '../../utils/getNextCycleType.ts';
 import { TaskActionTypes } from '../../contexts/TaskContext/taskActions.ts';
 import { getNextCycle } from '../../utils/getNextCycle.ts';
+import { Tips } from '../Tips';
+import { showMessage } from '../adapters/showMessage.ts';
 
 export function MainForm() {
   const { state, dispatch } = useTaskContext();
-  const taskNameInput = useRef<HTMLInputElement>(null); // Vamos contar quantas
+  const taskNameInput = useRef<HTMLInputElement>(null);
+  const lastTaskName = state.tasks[state.tasks.length - 1]?.name || '';
 
   const nextCycle = getNextCycle(state.currentCycle);
   const nextCycleType = getNextCycleType(nextCycle);
 
   function handleCreateNewTask(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    showMessage.dismiss();
     if (!taskNameInput.current) return;
 
     const taskName = taskNameInput.current.value.trim();
     if (!taskName) {
-      alert('Digite o nome da tarefa');
+      showMessage.warn('Digite o nome da tarefa!');
       return;
     }
 
@@ -37,31 +41,19 @@ export function MainForm() {
     };
 
     dispatch({ type: TaskActionTypes.START_TASK, payload: newTask });
+    showMessage.success('Tarefa iniciada com sucesso!');
   }
 
   function handleInterruptTask(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) {
     e.preventDefault();
+    showMessage.dismiss();
+    showMessage.info('Tarefa interrompida!');
 
     dispatch({
       type: TaskActionTypes.INTERRUPT_TASK,
     });
-
-    // setState(prevState => {
-    //   return {
-    //     ...prevState,
-    //     activeTask: null,
-    //     secondsRemaining: 0,
-    //     formattedSecondsRemaining: '00:00',
-    //     tasks: prevState.tasks.map(task => {
-    //       if (prevState.activeTask && prevState.activeTask.id === task.id) {
-    //         return { ...task, interruptDate: Date.now() };
-    //       }
-    //       return task;
-    //     }),
-    //   };
-    // });
   }
 
   return (
@@ -74,10 +66,11 @@ export function MainForm() {
           placeholder='Digite algo'
           ref={taskNameInput}
           disabled={!!state.activeTask}
+          defaultValue={lastTaskName}
         />
       </div>
       <div className='formRow'>
-        <p>Próximo intervalo é de 25 min</p>
+        <Tips nextCycleType={nextCycleType} />
       </div>
       {state.currentCycle > 0 && (
         <div className='formRow'>

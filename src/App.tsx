@@ -1,15 +1,16 @@
 import './styles/theme.css';
 import './styles/global.css';
 
-import { Home } from './pages/Home';
 import { TaskContextProvider } from './contexts/TaskContext/TaskContextProvider.tsx';
+import { MessagesContainer } from './components/MessagesContainer';
+import { MainRouter } from './routers/MainRouter';
 
 export function App() {
   return (
     <TaskContextProvider>
-      <Home />
+      <MessagesContainer>
+        <MainRouter />
+      </MessagesContainer>
     </TaskContextProvider>
   );
 }
-
-// A ideia é deixar que cada função faça a sua parte, de modo que o setState seja chamado dentro dessas funções auxiliares.
